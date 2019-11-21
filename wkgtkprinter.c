@@ -42,8 +42,6 @@ static void web_view_load_changed (WebKitWebView  *web_view,
         printf ("printing pdf file: %s\n",gtk_print_settings_get(WK_GTK_UDATA->print_settings, GTK_PRINT_SETTINGS_OUTPUT_URI));
     {
 
-
-        GtkPrintSettings *print_settings = WK_GTK_UDATA->print_settings;
         WebKitPrintOperation * print_operation = WK_GTK_UDATA->print_operation;
         webkit_print_operation_print (print_operation);
     }
@@ -53,7 +51,7 @@ static void web_view_load_changed (WebKitWebView  *web_view,
 
 }
 
-void html2pdf(const char* in_uri, const char* html_txt, const char* base_uri, const char* out_uri)
+void html2pdf(const char* in_uri, const char* html_txt, const char* base_uri, const char* out_uri, const char* key_file_data)
 {
 
     gtk_init_check (NULL,
@@ -72,10 +70,6 @@ void html2pdf(const char* in_uri, const char* html_txt, const char* base_uri, co
                                 GTK_PRINT_SETTINGS_OUTPUT_BASENAME,
                                 "html2pdf_test"
                                 );*/ // commented out in favor of GTK_PRINT_SETTINGS_OUTPUT_URI
-    gtk_print_settings_set (print_settings,
-                                GTK_PRINT_SETTINGS_OUTPUT_URI,
-                                out_uri
-                                );
     gtk_print_settings_set_quality (print_settings,
                                     GTK_PRINT_QUALITY_HIGH);
     gtk_print_settings_set_resolution (print_settings,
@@ -85,6 +79,35 @@ void html2pdf(const char* in_uri, const char* html_txt, const char* base_uri, co
 
     gtk_print_settings_set_orientation (print_settings,
                                         GTK_PAGE_ORIENTATION_PORTRAIT);
+    gtk_print_settings_set_paper_width (print_settings,
+                                        500,
+                                        GTK_UNIT_MM);
+
+    GtkPageSetup * page_setup = gtk_page_setup_new ();
+    gtk_page_setup_set_orientation(page_setup, GTK_PAGE_ORIENTATION_PORTRAIT);
+
+    if (key_file_data!= NULL)
+    {
+        GKeyFile * key_file = g_key_file_new ();
+        g_key_file_load_from_data(key_file, key_file_data, (gsize)-1, G_KEY_FILE_NONE, NULL);
+        gtk_page_setup_load_key_file(page_setup,key_file, NULL, NULL);
+        gtk_print_settings_load_key_file(print_settings, key_file, NULL, NULL);
+
+
+        g_key_file_free (key_file);
+
+
+    }
+    /*GKeyFile * key_file = g_key_file_new ();
+    gtk_print_settings_to_key_file(print_settings,key_file,NULL);
+    gtk_page_setup_to_key_file(page_setup, key_file, NULL);
+    printf("%s\n",g_key_file_to_data (key_file, NULL, NULL));
+    g_key_file_free (key_file);*/
+
+    gtk_print_settings_set (print_settings,
+                                GTK_PRINT_SETTINGS_OUTPUT_URI,
+                                out_uri
+                                );
 
     user_data.print_settings = print_settings;
 
@@ -94,6 +117,7 @@ void html2pdf(const char* in_uri, const char* html_txt, const char* base_uri, co
 
     WebKitPrintOperation * print_operation = webkit_print_operation_new (web_view);
     webkit_print_operation_set_print_settings(print_operation,print_settings);
+    webkit_print_operation_set_page_setup(print_operation,page_setup);
     g_signal_connect (print_operation, "finished", G_CALLBACK (print_finished), &user_data);
     user_data.print_operation = print_operation;
 
@@ -115,8 +139,10 @@ void html2pdf(const char* in_uri, const char* html_txt, const char* base_uri, co
 
     g_object_unref( G_OBJECT(print_operation));
     g_object_unref( G_OBJECT(print_settings));
+    g_object_unref( G_OBJECT(page_setup));
 
     gtk_widget_destroy(GTK_WIDGET(web_view));
     g_object_unref( G_OBJECT(web_view));
+
 }
 
