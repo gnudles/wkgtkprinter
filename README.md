@@ -5,7 +5,7 @@ A simple snippet (glue code) written in C to demonstrate the conversion process 
 
 You can use this code to generate invoices from command line or from your software. you can use it from any programming language using libffi.
 
-Very minimalistic code, and easy to embed and understand. only one function does the conversion in synchronous way.
+Very minimalistic code, and easy to tweak, embed and understand. only one function does the conversion in synchronous way.
 
 example for use in multi-threaded non-gtk application (like web server)
 ```c
@@ -44,7 +44,9 @@ int main()
 ```
 
 gtk application should use only the ```wkgtkprinter_html2pdf``` function.
+
 function usage:
+
 ```c
 void wkgtkprinter_html2pdf(const char* in_uri, const char* html_txt, const char* base_uri, const char* out_uri, const char* key_file_data, const char* default_stylesheet)
 // in_uri - the uri to load. eg. www.github.com

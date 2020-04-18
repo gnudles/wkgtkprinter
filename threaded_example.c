@@ -1,6 +1,7 @@
 
 #include <stddef.h>
 #include <glib.h>
+#include "wkgtkprinter.h"
 const char * outputs[3]=
 {"file:///tmp/test1.pdf","file:///tmp/test2.pdf","file:///tmp/test3.pdf"};
 

@@ -38,8 +38,7 @@ static void web_view_load_changed (WebKitWebView  *web_view,
 
         break;
     case WEBKIT_LOAD_FINISHED:
-        //printf("WEBKIT_LOAD_FINISHED\n");
-        printf ("printing pdf file: %s\n",gtk_print_settings_get(WK_GTK_UDATA->print_settings, GTK_PRINT_SETTINGS_OUTPUT_URI));
+        //printf ("printing pdf file: %s\n",gtk_print_settings_get(WK_GTK_UDATA->print_settings, GTK_PRINT_SETTINGS_OUTPUT_URI));
     {
 
         WebKitPrintOperation * print_operation = WK_GTK_UDATA->print_operation;
