@@ -16,7 +16,7 @@ int main()
  wkgtkprinter_gtk_mainloop_start_thread();
 ...
 
- wkgtkprinter_html2pdf(NULL, "<div style=\"background: #ff007e;overflow: hidden;\">HELLO WORLD!<br/>by wkgtkprinter</div>", NULL, "hello.pdf", print_settings, NULL);
+ wkgtkprinter_html2pdf(NULL, "<div style=\"background: #ff007e;overflow: hidden;\">HELLO WORLD!<br/>by wkgtkprinter</div>", NULL, "file://hello.pdf", print_settings, NULL);
 
 ...
 
