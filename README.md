@@ -15,7 +15,7 @@ int main()
  // start the main loop thread
  wkgtkprinter_gtk_mainloop_start_thread();
 ...
-//from a thread call to...
+//from a thread, call to...
  wkgtkprinter_html2pdf(NULL, "<div style=\"background: #ff007e;overflow: hidden;\">HELLO WORLD!<br/>by wkgtkprinter</div>", NULL, "file://hello.pdf", print_settings, NULL);
 
 ...
@@ -73,9 +73,12 @@ void wkgtkprinter_html2pdf(const char* in_uri, const char* html_txt, const char*
             "MarginBottom=14.224\n"
             "MarginLeft=6.35\n"
             "MarginRight=6.35\n"
-            "Orientation=landscape\n";
-
+            "Orientation=landscape\n"
+(Orientation key can be either landscape or portrait)
+(printer key must be equal to "Print to File" as above.)
 */
+
+
 // default_stylesheet - (can be null) stylesheet to override the default css of the webview.
 ```
 
