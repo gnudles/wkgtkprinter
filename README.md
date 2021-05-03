@@ -16,7 +16,7 @@ int main()
  wkgtkprinter_gtk_mainloop_start_thread();
 ...
 
- wkgtkprinter_html2pdf(NULL, "<div style=\"background: #ff007e;overflow: hidden;\">HELLO WORLD!<br/>by wkgtkprinter</div>", NULL, (const char*)data, print_settings, NULL);
+ wkgtkprinter_html2pdf(NULL, "<div style=\"background: #ff007e;overflow: hidden;\">HELLO WORLD!<br/>by wkgtkprinter</div>", NULL, "file://hello.pdf", print_settings, NULL);
 
 ...
 
@@ -49,11 +49,11 @@ function usage:
 
 ```c
 void wkgtkprinter_html2pdf(const char* in_uri, const char* html_txt, const char* base_uri, const char* out_uri, const char* key_file_data, const char* default_stylesheet)
-// in_uri - the uri to load. eg. www.github.com
+// in_uri - the uri to load. eg. www.github.com (optional if raw html is supplied.)
 // html_txt - if in_uri is null, this html string will be rendered.
-// base_uri - the uri of the environment of the html. in brief, the path that all the assets (images,css files etc.) are relative to.
-// out_uri - the destination pdf file in uri. something like file:///home/user/pdf_out/x.pdf
-// key_file_data - advanced printing setting in INI style. for example:
+// base_uri - the URI of the environment of the html. in brief, the path that all the assets (images,css files etc.) are relative to.
+// out_uri - the destination pdf file in URI format. something like: file:///home/user/pdf_out/x.pdf
+// key_file_data - (can be null) advanced printing setting in INI style. for example:
 /*
 "[Print Settings]\n"
     "quality=high\n"
@@ -69,13 +69,13 @@ void wkgtkprinter_html2pdf(const char* in_uri, const char* html_txt, const char*
             "DisplayName=A4\n"
             "Width=210\n"
             "Height=297\n"
-            "MarginTop=6.3499999999999996\n"
+            "MarginTop=6.35\n"
             "MarginBottom=14.224\n"
-            "MarginLeft=6.3499999999999996\n"
-            "MarginRight=6.3499999999999996\n"
+            "MarginLeft=6.35\n"
+            "MarginRight=6.35\n"
             "Orientation=landscape\n";
 
 */
-// default_stylesheet - stylesheet to override the default css of the webview.
+// default_stylesheet - (can be null) stylesheet to override the default css of the webview.
 ```
 
