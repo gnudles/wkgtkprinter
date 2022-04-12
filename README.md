@@ -51,7 +51,7 @@ function usage:
 void wkgtkprinter_html2pdf(const char* in_uri, const char* html_txt, const char* base_uri, const char* out_uri, const char* key_file_data, const char* default_stylesheet)
 // in_uri - the uri to load. eg. www.github.com (optional if raw html is supplied.)
 // html_txt - if in_uri is null, this html string will be rendered.
-// base_uri - the URI of the environment of the html. in brief, the path that all the assets (images,css files etc.) are relative to.
+// base_uri - the URI of the environment of the html. in brief, the path that all the assets (images,css files etc.) are relative to (mandatory if in_uri is null).
 // out_uri - the destination pdf file in URI format. something like: file:///home/user/pdf_out/x.pdf
 // key_file_data - (can be null) advanced printing setting in INI style. for example:
 /*
