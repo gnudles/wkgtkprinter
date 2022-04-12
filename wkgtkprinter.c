@@ -49,10 +49,13 @@ static void web_view_load_changed (WebKitWebView  *web_view,
     }
 
 }
+static int nonthreaded_init = 0 ;
 void wkgtkprinter_gtk_init()
 {
 	gtk_init_check (NULL,  NULL);
+	nonthreaded_init = 1;
 }
+
 static GThread * main_mainloop_thread = 0;
 static GMainLoop * main_mainloop = 0;
 static gpointer mainloop_func(gpointer data)
@@ -229,7 +232,7 @@ void wkgtkprinter_html2pdf(const char* in_uri, const char* html_txt, const char*
     struct html2pdf_params *p = (struct html2pdf_params*)g_malloc(sizeof(struct html2pdf_params));
              p->in_uri=in_uri;p->html_txt=html_txt;p->base_uri=base_uri;p->out_uri=out_uri;
             p->key_file_data=key_file_data;p->default_stylesheet=default_stylesheet;
-    if ((g_main_context_get_thread_default () == NULL || g_main_depth () == 0) && g_main_context_default () != NULL) //not in main thread
+    if ((g_main_context_get_thread_default () == NULL || g_main_depth () == 0) && g_main_context_default () != NULL && !nonthreaded_init) //not in main thread
     {
         GMutex wait_mutex;
         GCond wait_cond;
