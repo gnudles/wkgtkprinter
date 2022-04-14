@@ -13,7 +13,7 @@ void print_help()
 }
 int read_file(char **bufptr, FILE *stream)
 {
-#define CHUNK_SIZE 6
+#define CHUNK_SIZE 4096
   *bufptr = malloc(CHUNK_SIZE+1);
   ssize_t n;
   size_t buflen = 0;
