@@ -8,8 +8,10 @@
 
 void print_help()
 {
-  printf("usage: wkgtkprinter\n");
-  printf("html string should be provided through stdin\n");
+  printf("usage: wkgtkprinter [-i <input_uri>] [-b <base_uri>] [-k <key_file>] [-s <default_css>] -o <out_uri>\n");
+  printf("html string should be provided through stdin. (if input_uri was not provided.)\n");
+  printf("Pdf result must be written to file, no option for outputing to stdout. (but you may write to a pipe file.)\n");
+
 }
 int read_file(char **bufptr, FILE *stream)
 {
