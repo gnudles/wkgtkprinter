@@ -8,8 +8,9 @@
 
 void print_help()
 {
-  printf("usage: wkgtkprinter [options]\n");
-  printf("html string should be provided through stdin\n");
+  printf("usage: wkgtkprinter [-i <input_uri>] [-b <base_uri>] [-k <key_file>] [-s <default_css>] -o <out_uri>\n");
+  printf("html string should be provided through stdin. (if input_uri was not provided.)\n");
+  printf("Pdf result must be written to file, no option for outputing to stdout. (but you may write to a pipe file.)\n");
   printf("Options:\n"
 "-i <uri>         [Input URI] Supply input uri for the html source (instead of stdin)\n"
 "                 eg. file:///home/user/in.html or https://webkit.org ...\n"
@@ -48,7 +49,7 @@ void print_help()
 }
 int read_file(char **bufptr, FILE *stream)
 {
-#define CHUNK_SIZE 6
+#define CHUNK_SIZE 4096
   *bufptr = malloc(CHUNK_SIZE+1);
   ssize_t n;
   size_t buflen = 0;
