@@ -163,6 +163,13 @@ static int __html2pdf(struct html2pdf_params *p)
 
     web_view =  WEBKIT_WEB_VIEW( webkit_web_view_new_with_context (web_context) );
 
+    WebKitSettings * view_settings = webkit_web_view_get_settings (web_view);
+    webkit_settings_set_enable_javascript (  view_settings,  false);
+    webkit_settings_set_enable_page_cache (  view_settings,  false);
+    webkit_settings_set_enable_html5_database (  view_settings,  false);
+    webkit_settings_set_enable_html5_local_storage (  view_settings,  false);
+    webkit_settings_set_enable_offline_web_application_cache (  view_settings,  false);
+
     if (p->default_stylesheet)
     {
         user_content_manager = webkit_user_content_manager_new ();
@@ -198,21 +205,27 @@ static int __html2pdf(struct html2pdf_params *p)
 
     g_main_loop_run (main_loop);
 
-    g_main_loop_unref (main_loop);
+
 
     g_object_unref( G_OBJECT(print_operation));
     g_object_unref( G_OBJECT(print_settings));
     g_object_unref( G_OBJECT(page_setup));
-
-    gtk_widget_destroy(GTK_WIDGET(web_view));
-    g_object_unref( G_OBJECT(web_view));
-    g_object_unref( G_OBJECT(web_context));
 
     if (p->default_stylesheet)
     {
         g_object_unref( G_OBJECT(user_content_manager));
         webkit_user_style_sheet_unref( user_stylesheet);
     }
+
+    
+    gtk_widget_destroy(GTK_WIDGET(web_view));
+
+    g_object_unref( G_OBJECT(web_view));
+
+    g_object_unref( G_OBJECT(web_context));
+    
+
+    g_main_loop_unref (main_loop);
 
     GMutex * wait_mutex= p->wait_mutex;
     GCond * wait_cond= p->wait_cond;

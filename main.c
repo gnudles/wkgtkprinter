@@ -8,8 +8,43 @@
 
 void print_help()
 {
-  printf("usage: wkgtkprinter\n");
+  printf("usage: wkgtkprinter [options]\n");
   printf("html string should be provided through stdin\n");
+  printf("Options:\n"
+"-i <uri>         [Input URI] Supply input uri for the html source (instead of stdin)\n"
+"                 eg. file:///home/user/in.html or https://webkit.org ...\n"
+"-o <uri>         [Output URI] Supply output uri for the pdf output (mandatory) \n"
+"                 eg. file:///home/user/x.pdf\n"
+"-b <uri>         [Base URI] When you supply html string, you must provide\n"
+"                 a base uri where all your external resources (images, css, etc) sits in\n"
+"                 (similar to the <base> tag in html). You must provide it (and in uri format)\n"
+"                 even if your html string do not contain any external reference.\n"
+"-k <file>        [Key file] key file contains settings for the pdf printer.\n"
+"                 a typical key file should look like:\n"
+"\n"
+"     ~~~~~~~~~~~~~~~~~~~\\n"
+"     [Print Settings]\n"
+"     quality=high\n"
+"     resolution-x=320\n"
+"     resolution-y=320\n"
+"     resolution=320\n"
+"     output-file-format=pdf       <--- mandatory\n"
+"     printer=Print to File        <--- mandatory\n"
+"     page-set=all\n"
+"\n"
+"     [Page Setup]\n"
+"     PPDName=A4\n"
+"     DisplayName=A4\n"
+"     Width=210\n"
+"     Height=297\n"
+"     MarginTop=6.35\n"
+"     MarginBottom=14.224\n"
+"     MarginLeft=6.35\n"
+"     MarginRight=6.35\n"
+"     Orientation=landscape|portrait\n"
+"     ~~~~~~~~~~~~~~~~~~~\n"
+"-s <file>        [Default stylesheet file] in css format, optional.\n"
+"-h               print this help and exits.\n");
 }
 int read_file(char **bufptr, FILE *stream)
 {
@@ -72,7 +107,7 @@ int main(int argc, char ** argv)
         print_help();
         return 0;
       case '?':
-        if (optopt == 'i' || optopt == 'o' ||optopt == 'k' ||optopt == 'b' )
+        if (optopt == 'i' || optopt == 'o' ||optopt == 'k' ||optopt == 'b' || optopt == 's' )
           fprintf (stderr, "Option -%c requires an argument.\n", optopt);
         else if (isprint (optopt))
           fprintf (stderr, "Unknown option `-%c'.\n", optopt);
@@ -116,7 +151,7 @@ int main(int argc, char ** argv)
   if (out_uri == NULL)
   {
     fprintf (stderr,
-                   "Missing out_uri argument\n");
+                   "Missing [Output URI] argument. Add '-o <output-uri>' to the arguments\n");
     return -1;
   }
   
@@ -125,7 +160,7 @@ int main(int argc, char ** argv)
     if (base_uri == NULL)
     {
       fprintf (stderr,
-                   "Missing base_uri argument\n");
+                   "Missing [Base URI] argument\n");
       return -1;
     }
     size_t len = 0;
