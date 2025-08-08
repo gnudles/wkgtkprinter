@@ -90,6 +90,8 @@ void wkgtkprinter_gtk_mainloop_stop_thread()
 
     g_thread_join (main_mainloop_thread);
     g_main_loop_unref (main_mainloop);
+	main_mainloop = NULL;
+	main_mainloop_thread = NULL;
 }
 
 struct html2pdf_params
