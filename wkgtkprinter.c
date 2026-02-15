@@ -163,15 +163,6 @@ static int __html2pdf(struct html2pdf_params *p)
     WebKitUserContentManager *user_content_manager = 0;
     WebKitUserStyleSheet * user_stylesheet = 0;
 
-    web_view =  WEBKIT_WEB_VIEW( webkit_web_view_new_with_context (web_context) );
-
-    WebKitSettings * view_settings = webkit_web_view_get_settings (web_view);
-    webkit_settings_set_enable_javascript (  view_settings,  false);
-    webkit_settings_set_enable_page_cache (  view_settings,  false);
-    webkit_settings_set_enable_html5_database (  view_settings,  false);
-    webkit_settings_set_enable_html5_local_storage (  view_settings,  false);
-    webkit_settings_set_enable_offline_web_application_cache (  view_settings,  false);
-
     if (p->default_stylesheet)
     {
         user_content_manager = webkit_user_content_manager_new ();
@@ -183,8 +174,24 @@ static int __html2pdf(struct html2pdf_params *p)
         webkit_user_content_manager_add_style_sheet
     	                       (user_content_manager,
     	                        user_stylesheet);
-         g_object_set_property(G_OBJECT(web_view),"user-content-manager", (GValue*)(user_content_manager) );
     }
+
+    if (user_content_manager)
+    {
+        web_view =  WEBKIT_WEB_VIEW( g_object_new(WEBKIT_TYPE_WEB_VIEW, "web-context", web_context, "user-content-manager", user_content_manager, NULL));
+    }
+    else
+    {
+        web_view =  WEBKIT_WEB_VIEW( webkit_web_view_new_with_context (web_context) );
+    }
+
+    WebKitSettings * view_settings = webkit_web_view_get_settings (web_view);
+    webkit_settings_set_enable_javascript (  view_settings,  false);
+    webkit_settings_set_enable_page_cache (  view_settings,  false);
+    webkit_settings_set_enable_html5_database (  view_settings,  false);
+    webkit_settings_set_enable_html5_local_storage (  view_settings,  false);
+    webkit_settings_set_enable_offline_web_application_cache (  view_settings,  false);
+
     g_object_ref_sink(G_OBJECT(web_view));
 
     WebKitPrintOperation * print_operation = webkit_print_operation_new (web_view);
@@ -220,8 +227,6 @@ static int __html2pdf(struct html2pdf_params *p)
     }
 
     
-    gtk_widget_destroy(GTK_WIDGET(web_view));
-
     g_object_unref( G_OBJECT(web_view));
 
     g_object_unref( G_OBJECT(web_context));

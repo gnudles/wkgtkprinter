@@ -1,4 +1,4 @@
-PKG_CONF = `pkg-config --libs --cflags gtk+-3.0 webkit2gtk-4.0`
+PKG_CONF = `pkg-config --libs --cflags gtk+-3.0 webkit2gtk-4.1`
 all: libwkgtkprinter.so wkgtkprinter
 libwkgtkprinter.so: wkgtkprinter.c Makefile
 	gcc -g -shared -fPIC -o libwkgtkprinter.so wkgtkprinter.c $(PKG_CONF)
