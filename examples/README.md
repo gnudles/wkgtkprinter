@@ -21,23 +21,21 @@ Make sure to set `LD_LIBRARY_PATH` to the directory containing `libwkgtkprinter.
 
 ### Invoice Generator
 
-Generates a PDF invoice from an HTML template (`invoice_template.html`).
+Generates a PDF invoice from an HTML template (`invoice_template.html`). It supports customization via command-line arguments.
 
 ```bash
 export LD_LIBRARY_PATH=..
-./invoice_generator
+./invoice_generator --customer "Jane Smith" --date "2024-02-14" --number "INV-999" --total "$500.00" --items "<tr><td>Consulting</td><td>2</td><td>$250.00</td><td>$500.00</td></tr>"
 ```
-Output: `invoice.pdf`
 
-### Wedding Invitation Generator
-
-Generates a wedding invitation PDF using embedded HTML/CSS. You can optionally provide names and date as arguments.
-
-```bash
-export LD_LIBRARY_PATH=..
-./invitation_generator "Romeo" "Juliet" "February 14, 2024"
-```
-Output: `invitation.pdf`
+Options:
+- `-c, --customer`: Customer Name
+- `-d, --date`: Invoice Date
+- `-n, --number`: Invoice Number
+- `-t, --total`: Total Amount
+- `-i, --items`: Items Rows (HTML `<tr>...</tr>`)
+- `-o, --output`: Output PDF file (default: invoice.pdf)
+- `-T, --template`: Template HTML file (default: invoice_template.html)
 
 ### Card Game Generator
 
