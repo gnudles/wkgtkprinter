@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <gtk/gtk.h>
 #include <webkit2/webkit2.h>
+// #include <webkit/webkit.h> // for webkit 6
 
 
 struct WkGtkPrinterUserData
@@ -61,6 +62,7 @@ static void web_view_load_changed (WebKitWebView  *web_view,
     }
 
 }
+
 static int nonthreaded_init = 0 ;
 void wkgtkprinter_gtk_init()
 {
@@ -76,7 +78,9 @@ static gpointer mainloop_func(gpointer data)
     main_mainloop = g_main_loop_new(NULL,false);
 
     g_main_loop_run (main_mainloop);
+    return NULL;
 }
+
 void wkgtkprinter_gtk_mainloop_start_thread()
 {
 	if (main_mainloop_thread == NULL)
@@ -113,12 +117,18 @@ GCond* wait_cond;
 GMutex* wait_mutex;
 int * wait_data;
 };
+
+
+
 static int __html2pdf(struct html2pdf_params *p)
 {
     struct WkGtkPrinterUserData user_data;
     GtkPrintSettings *print_settings = gtk_print_settings_new ();
+
+    // TODO: On some systems, the "Print to File" printer may not be available, Or in a different language, so we should probably check for the existence of the printer before trying to use it, and if it doesn't exist, we should probably use the default printer and set the output file in the print settings.
     gtk_print_settings_set_printer (print_settings,
-                                    "Print to File");
+                                        "Print to File");
+
     gtk_print_settings_set (print_settings,
                               GTK_PRINT_SETTINGS_OUTPUT_FILE_FORMAT,
                             "pdf");
@@ -138,9 +148,9 @@ static int __html2pdf(struct html2pdf_params *p)
 
     gtk_print_settings_set_orientation (print_settings,
                                         GTK_PAGE_ORIENTATION_PORTRAIT);
-    gtk_print_settings_set_paper_width (print_settings,
-                                        500,
-                                        GTK_UNIT_MM);
+    GtkPaperSize *paper_size = gtk_paper_size_new(GTK_PAPER_NAME_A4);
+    gtk_print_settings_set_paper_size(print_settings, paper_size);
+    gtk_paper_size_free(paper_size);
 
     GtkPageSetup * page_setup = gtk_page_setup_new ();
     gtk_page_setup_set_orientation(page_setup, GTK_PAGE_ORIENTATION_PORTRAIT);
@@ -169,12 +179,13 @@ static int __html2pdf(struct html2pdf_params *p)
                                 );
 
     user_data.print_settings = print_settings;
-
-    WebKitWebContext *  web_context = webkit_web_context_new_ephemeral ();
+    
+    WebKitWebContext *  web_context = webkit_web_context_new ();
+    webkit_web_context_set_cache_model(web_context, WEBKIT_CACHE_MODEL_DOCUMENT_VIEWER);
     WebKitWebView * web_view = 0;
     WebKitUserContentManager *user_content_manager = 0;
     WebKitUserStyleSheet * user_stylesheet = 0;
-
+    
     if (p->default_stylesheet)
     {
         user_content_manager = webkit_user_content_manager_new ();
@@ -236,7 +247,7 @@ static int __html2pdf(struct html2pdf_params *p)
     if (p->default_stylesheet)
     {
         g_object_unref( G_OBJECT(user_content_manager));
-        webkit_user_style_sheet_unref( user_stylesheet);
+        g_object_unref( G_OBJECT(user_stylesheet));
     }
 
     
