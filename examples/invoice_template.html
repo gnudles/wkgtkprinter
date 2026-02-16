@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Invoice</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .invoice-details {
+            margin-bottom: 20px;
+        }
+        .invoice-details table {
+            width: 100%;
+        }
+        .invoice-details td {
+            padding: 5px;
+        }
+        .items-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        .items-table th, .items-table td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        .items-table th {
+            background-color: #f2f2f2;
+        }
+        .total {
+            text-align: right;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Invoice</h1>
+        <p>Company Name Inc.</p>
+    </div>
+
+    <div class="invoice-details">
+        <table>
+            <tr>
+                <td><strong>Billed To:</strong><br>{{customer_name}}</td>
+                <td style="text-align: right;"><strong>Date:</strong> {{date}}<br><strong>Invoice #:</strong> {{invoice_number}}</td>
+            </tr>
+        </table>
+    </div>
+
+    <table class="items-table">
+        <thead>
+            <tr>
+                <th>Description</th>
+                <th>Quantity</th>
+                <th>Unit Price</th>
+                <th>Total</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{items_rows}}
+        </tbody>
+    </table>
+
+    <div class="total">
+        <p>Total: {{total}}</p>
+    </div>
+</body>
+</html>
