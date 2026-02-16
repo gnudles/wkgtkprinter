@@ -16,6 +16,18 @@ print_finished (WebKitPrintOperation *print_operation,
 {
     g_main_loop_quit (WK_GTK_UDATA->main_loop);
 }
+
+static void
+print_failed (WebKitPrintOperation *print_operation,
+               gpointer              error,
+               gpointer              user_data)
+{
+    GError *e = error;
+    g_printerr("%s: %s\n",
+             g_quark_to_string(e->domain),
+             (gchar*)e->message);
+    g_main_loop_quit (WK_GTK_UDATA->main_loop);
+}
 static void web_view_load_changed (WebKitWebView  *web_view,
                                    WebKitLoadEvent load_event,
                                    gpointer        user_data)
@@ -198,6 +210,7 @@ static int __html2pdf(struct html2pdf_params *p)
     webkit_print_operation_set_print_settings(print_operation,print_settings);
     webkit_print_operation_set_page_setup(print_operation,page_setup);
     g_signal_connect (print_operation, "finished", G_CALLBACK (print_finished), &user_data);
+    g_signal_connect (print_operation, "failed", G_CALLBACK (print_failed), &user_data);
     user_data.print_operation = print_operation;
 
     GMainLoop * main_loop = g_main_loop_new(NULL,false);
