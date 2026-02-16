@@ -8,3 +8,5 @@ gui_example_deprecated: gui_example_deprecated.c
 	gcc -o gui_example_deprecated gui_example_deprecated.c $(PKG_CONF)
 wkgtkprinter: libwkgtkprinter.so main.c
 	gcc -g -o wkgtkprinter main.c -L. -lwkgtkprinter $(PKG_CONF)
+clean:
+	rm -f libwkgtkprinter.so wkgtkprinter threaded_example gui_example_deprecated
